@@ -1,0 +1,59 @@
+{
+  "_args": [
+    [
+      "./node_modules/flow-status-webpack-plugin/",
+      "/Users/diegodurli/Documents/Projects/Work/wemeter-frontend"
+    ]
+  ],
+  "_from": "node_modules/flow-status-webpack-plugin",
+  "_id": "flow-status-webpack-plugin@0.1.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/flow-status-webpack-plugin",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": null,
+    "raw": "./node_modules/flow-status-webpack-plugin/",
+    "rawSpec": "./node_modules/flow-status-webpack-plugin/",
+    "scope": null,
+    "spec": "/Users/diegodurli/Documents/Projects/Work/wemeter-frontend/node_modules/flow-status-webpack-plugin",
+    "type": "directory"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "file:node_modules/flow-status-webpack-plugin",
+  "_shasum": "39dff96529a202aad355f586c5bf869d4fa9c73c",
+  "_shrinkwrap": null,
+  "_spec": "./node_modules/flow-status-webpack-plugin/",
+  "_where": "/Users/diegodurli/Documents/Projects/Work/wemeter-frontend",
+  "author": {
+    "email": "dgodurli@gmail",
+    "name": "Diego Durli",
+    "url": "https://github.com/diegodurli"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "shelljs": "^0.6.0"
+  },
+  "description": "Run Flow Status on each Webpack build.",
+  "devDependencies": {},
+  "keywords": [
+    "flow-status",
+    "flowtype.js",
+    "webpack"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "diegodurli",
+      "email": "dgodurli@gmail.com"
+    }
+  ],
+  "name": "flow-status-webpack-plugin",
+  "optionalDependencies": {},
+  "readme": "Flow Status Webpack Plugin\n==========================\n\n\nThis [webpack](http://webpack.github.io/) plugin will start a [Flow](http://flowtype.org/) server and run `flow status` on each webpack build. Still experimental.\n\nIf you have any idea on how to get it better, you're welcome to contribute!\n\n----------\n\n\nRequirements\n------------\n\nYou need to have Flow installed. To do that, follow [these steps](http://flowtype.org/docs/getting-started.html#_).\n\n----------\n\nInstallation\n------------\n    npm install flow-status-webpack-plugin --save-dev\n\n----------\n\nUsage\n-------\n\n```\nvar FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');\n\nmodule.exports = {\n    ...\n    plugins: [\n        new FlowStatusWebpackPlugin()\n    ]\n}\n```\n\nIt will generate an output like this:\n\n![Flow has no errors](http://i.imgur.com/GX2xg8J.png?1)\n\nor, in case of some error:\n\n![Flow has errors](http://i.imgur.com/4cnu50c.png?1)\n\n----------\n\nConfiguration\n----------------\n\nIn case you have [Flow Interfaces](http://flowtype.org/docs/third-party.html#_) and you're not using a `.flowconfig` file, you need to specify a path to your interfaces directory, otherwise flow will not be able to identify (and use) those interfaces.\n\n\n```\nvar FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');\n\nmodule.exports = {\n    ...\n    plugins: [\n        new FlowStatusWebpackPlugin({\n            interfacesPath: 'path/to/interfaces/directory'\n        })\n    ]\n}\n```\n\nLicense\n---------\nThis plugin is released under the [MIT License](https://opensource.org/licenses/MIT).",
+  "readmeFilename": "README.md",
+  "version": "0.1.0"
+}
