@@ -1,6 +1,8 @@
 Flow Status Webpack Plugin
 ==========================
 
+[![npm version](https://img.shields.io/npm/v/flow-status-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/flow-status-webpack-plugin) [![npm downloads](https://img.shields.io/npm/dm/flow-status-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/flow-status-webpack-plugin)
+
 This [webpack](http://webpack.github.io/) plugin will start a [Flow](http://flowtype.org/) server and run `flow status` on each webpack build. Still experimental.
 
 If you have any idea on how to get it better, you're welcome to contribute!
