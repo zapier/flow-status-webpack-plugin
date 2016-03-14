@@ -3,7 +3,7 @@ Flow Status Webpack Plugin
 
 [![npm version](https://img.shields.io/npm/v/flow-status-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/flow-status-webpack-plugin) [![npm downloads](https://img.shields.io/npm/dm/flow-status-webpack-plugin.svg?style=flat-square)](https://www.npmjs.com/package/flow-status-webpack-plugin)
 
-This [webpack](http://webpack.github.io/) plugin will start a [Flow](http://flowtype.org/) server and run `flow status` on each webpack build. Still experimental.
+This [webpack](http://webpack.github.io/) plugin will automatically start a [Flow](http://flowtype.org/) server (or restart if one is running) when webpack starts up, and run `flow status` after each webpack build. Still experimental.
 
 If you have any idea on how to get it better, you're welcome to contribute!
 
@@ -19,7 +19,7 @@ Installation
 Usage
 -----
 
-```
+```js
 var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
 
 module.exports = {
@@ -41,16 +41,16 @@ or, in case of some error:
 Configuration
 -------------
 
-In case you have [Flow Interfaces](http://flowtype.org/docs/third-party.html#_) and you're not using a `.flowconfig` file, you need to specify a path to your interfaces directory, otherwise flow will not be able to identify (and use) those interfaces.
+If you want to pass additional command-line arguments to `flow start`, you can pass a `flowArgs` option to the plugin:
 
-```
+```js
 var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
 
 module.exports = {
     ...
     plugins: [
         new FlowStatusWebpackPlugin({
-            interfacesPath: 'path/to/interfaces/directory'
+            flowArgs: '--lib path/to/interfaces/directory'
         })
     ]
 }
