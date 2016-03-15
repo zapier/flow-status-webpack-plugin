@@ -1,11 +1,7 @@
 {
   "name": "flow-status-webpack-plugin",
   "version": "0.1.0",
-  "author": {
-    "email": "dgodurli@gmail",
-    "name": "Diego Durli",
-    "url": "https://github.com/diegodurli"
-  },
+  "author": "Diego Durli <dgodurli@gmail> (https://github.com/diegodurli)",
   "dependencies": {
     "colors": "^1.1.2",
     "shelljs": "^0.6.0"
@@ -20,11 +16,18 @@
   "license": "MIT",
   "main": "index.js",
   "maintainers": [
-    {
-      "name": "diegodurli",
-      "email": "dgodurli@gmail.com"
-    }
+    "diegodurli <dgodurli@gmail.com>"
   ],
   "optionalDependencies": {},
-  "readmeFilename": "README.md"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegodurli/flow-status-webpack-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/diegodurli/flow-status-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/diegodurli/flow-status-webpack-plugin#readme"
 }
