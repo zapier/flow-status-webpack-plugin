@@ -10,9 +10,14 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
     const flowArgs = options.flowArgs || '';
 
     function startFlow(cb) {
-        shell.exec('flow stop', () => {
+        if (options.restartFlow === false) {
             shell.exec('flow start ' + flowArgs, () => cb());
-        });
+        }
+        else {
+            shell.exec('flow stop', () => {
+                shell.exec('flow start ' + flowArgs, () => cb());
+            });
+        }
     }
 
     var firstRun = true;

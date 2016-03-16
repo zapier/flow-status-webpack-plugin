@@ -56,6 +56,22 @@ module.exports = {
 }
 ```
 
+If you don't want the plugin to automatically restart any running Flow server, pass `restartFlow: false`:
+
+```js
+var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
+
+module.exports = {
+    ...
+    plugins: [
+        new FlowStatusWebpackPlugin({
+            restartFlow: false
+        })
+    ]
+}
+```
+
+
 License
 -------
 This plugin is released under the [MIT License](https://opensource.org/licenses/MIT).
