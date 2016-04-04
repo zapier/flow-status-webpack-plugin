@@ -1,26 +1,28 @@
-const colors = require('colors');
-const shell = require('shelljs');
+const colors = require('colors'),
+    shell = require('shelljs');
 
 function FlowStatusWebpackPlugin(options) {
     this.options = options || {};
 }
 
 FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
-    const options = this.options;
-    const flowArgs = options.flowArgs || '';
+    const options = this.options,
+        flowArgs = options.flowArgs || '',
+        flow = options.binaryPath || 'flow';
+
+    var firstRun = true,
+        waitingForFlow = false;
 
     function startFlow(cb) {
         if (options.restartFlow === false) {
-            shell.exec('flow start ' + flowArgs, () => cb());
-        }
-        else {
-            shell.exec('flow stop', () => {
-                shell.exec('flow start ' + flowArgs, () => cb());
+            shell.exec(flow + ' start ' + flowArgs, () => cb());
+        } else {
+            shell.exec(flow + ' stop', () => {
+                shell.exec(flow + ' start ' + flowArgs, () => cb());
             });
         }
     }
 
-    var firstRun = true;
     function startFlowIfFirstRun(compiler, cb) {
         if (firstRun) {
             firstRun = false;
@@ -31,18 +33,17 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
         }
     }
 
-    // restart flow if interfacesPath was provided regardless of whether webpack is in normal or watch mode
+    // restart flow if interfacesPath was provided regardless
+    // of whether webpack is in normal or watch mode
     compiler.plugin('run', startFlowIfFirstRun);
     compiler.plugin('watch-run', startFlowIfFirstRun);
-
-    var waitingForFlow = false;
 
     function flowStatus() {
         if (!waitingForFlow) {
             waitingForFlow = true;
 
             // this will start a flow server if it was not running
-            shell.exec('flow status --color always', {silent: true}, (code, stdout, stderr) => {
+            shell.exec(flow + ' status --color always', {silent: true}, (code, stdout, stderr) => {
                 const hasErrors = code !== 0;
 
                 if (hasErrors) {
