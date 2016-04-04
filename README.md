@@ -71,6 +71,20 @@ module.exports = {
 }
 ```
 
+If provided a binary path, will run Flow from this path instead of running it from any global installation.
+
+```js
+var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
+
+module.exports = {
+    ...
+    plugins: [
+        new FlowStatusWebpackPlugin({
+            binaryPath: '/path/to/your/flow/installation'
+        })
+    ]
+}
+```
 
 License
 -------
