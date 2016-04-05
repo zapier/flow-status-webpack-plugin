@@ -1,4 +1,4 @@
-const colors = require('colors'),
+var colors = require('colors'),
     shell = require('shelljs');
 
 function FlowStatusWebpackPlugin(options) {
@@ -6,19 +6,18 @@ function FlowStatusWebpackPlugin(options) {
 }
 
 FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
-    const options = this.options,
+    var options = this.options,
         flowArgs = options.flowArgs || '',
-        flow = options.binaryPath || 'flow';
-
-    var firstRun = true,
+        flow = options.binaryPath || 'flow',
+        firstRun = true,
         waitingForFlow = false;
 
     function startFlow(cb) {
         if (options.restartFlow === false) {
-            shell.exec(flow + ' start ' + flowArgs, () => cb());
+            shell.exec(flow + ' start ' + flowArgs, cb);
         } else {
-            shell.exec(flow + ' stop', () => {
-                shell.exec(flow + ' start ' + flowArgs, () => cb());
+            shell.exec(flow + ' stop', function() {
+                shell.exec(flow + ' start ' + flowArgs, cb);
             });
         }
     }
@@ -43,8 +42,8 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
             waitingForFlow = true;
 
             // this will start a flow server if it was not running
-            shell.exec(flow + ' status --color always', {silent: true}, (code, stdout, stderr) => {
-                const hasErrors = code !== 0;
+            shell.exec(flow + ' status --color always', {silent: true}, function(code, stdout, stderr) {
+                var hasErrors = code !== 0;
 
                 if (hasErrors) {
                     console.log('\n----------------'.red);
