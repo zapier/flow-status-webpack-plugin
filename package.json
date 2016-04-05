@@ -1,6 +1,6 @@
 {
   "name": "flow-status-webpack-plugin",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Diego Durli <dgodurli@gmail> (https://github.com/diegodurli)",
   "dependencies": {
     "colors": "^1.1.2",
