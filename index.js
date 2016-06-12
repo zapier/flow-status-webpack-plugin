@@ -49,12 +49,14 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
                     console.log('\n----------------'.red);
                     console.log('Flow has errors!');
                     console.log('----------------\n'.red);
-                } else {
+                } else if (options.quietSuccess !== true) {
                     console.log('\n-----------------------------'.green);
                     console.log('Everything is fine with Flow!');
                     console.log('-----------------------------\n'.green);
                 }
-                console.log(stdout);
+                if (options.quietSuccess !== true || hasErrors) {
+                    console.log(stdout);
+                }
                 console.error(stderr);
 
                 waitingForFlow = false;
