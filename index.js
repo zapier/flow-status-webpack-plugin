@@ -1,71 +1,83 @@
-var colors = require('colors'),
-    shell = require('shelljs');
+var colors = require('colors');
+var shell = require('shelljs');
+
+
+function isFunction(x) {
+  return Object.prototype.toString.call(x) == '[object Function]';
+}
+
 
 function FlowStatusWebpackPlugin(options) {
-    this.options = options || {};
+  this.options = options || {};
 }
 
 FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
-    var options = this.options,
-        flowArgs = options.flowArgs || '',
-        flow = options.binaryPath || 'flow',
-        firstRun = true,
+  var options = this.options;
+  var flowArgs = options.flowArgs || '';
+  var flow = options.binaryPath || 'flow';
+  var firstRun = true;
+  var waitingForFlow = false;
+
+  function startFlow(cb) {
+    if (options.restartFlow === false) {
+      cb();
+    } else {
+      shell.exec(flow + ' stop', {silent: true}, function() {
+        shell.exec(flow + ' start ' + flowArgs, {silent: true}, cb);
+      });
+    }
+  }
+
+  function startFlowIfFirstRun(compiler, cb) {
+    if (firstRun) {
+      firstRun = false;
+      startFlow(cb);
+    }
+    else {
+      cb();
+    }
+  }
+
+  function flowStatus (successCb, errorCb) {
+    if (!waitingForFlow) {
+      waitingForFlow = true;
+
+      // this will start a flow server if it was not running
+      shell.exec(flow + ' status --color always', {silent: true}, function(code, stdout, stderr) {
+        var hasErrors = code !== 0;
+        cb = hasErrors ? errorCb : successCb
         waitingForFlow = false;
 
-    function startFlow(cb) {
-        if (options.restartFlow === false) {
-            cb();
-        } else {
-            shell.exec(flow + ' stop', function() {
-                shell.exec(flow + ' start ' + flowArgs, cb);
-            });
+        if (isFunction(cb)) {
+          cb(stdout, stderr)
         }
+      });
     }
+  }
 
-    function startFlowIfFirstRun(compiler, cb) {
-        if (firstRun) {
-            firstRun = false;
-            startFlow(cb);
-        }
-        else {
-            cb();
-        }
+  var flowError = null
+
+  function checkItWreckIt (compiler, cb) {
+    startFlowIfFirstRun(compiler, function () {
+      flowStatus(function success () {
+        cb()
+      }, function error (stdout) {
+        flowError = new Error(stdout)
+        cb()
+      })
+    })
+  }
+
+  compiler.plugin('run', checkItWreckIt);
+  compiler.plugin('watch-run', checkItWreckIt);
+
+  // If there are flow errors, fail the build before compilation starts.
+  compiler.plugin('compilation', function (compilation) {
+    if (flowError) {
+      compilation.errors.push(flowError);
+      flowError = null;
     }
-
-    // restart flow if interfacesPath was provided regardless
-    // of whether webpack is in normal or watch mode
-    compiler.plugin('run', startFlowIfFirstRun);
-    compiler.plugin('watch-run', startFlowIfFirstRun);
-
-    function flowStatus() {
-        if (!waitingForFlow) {
-            waitingForFlow = true;
-
-            // this will start a flow server if it was not running
-            shell.exec(flow + ' status --color always', {silent: true}, function(code, stdout, stderr) {
-                var hasErrors = code !== 0;
-
-                if (hasErrors) {
-                    console.log('\n----------------'.red);
-                    console.log('Flow has errors!');
-                    console.log('----------------\n'.red);
-                } else if (options.quietSuccess !== true) {
-                    console.log('\n-----------------------------'.green);
-                    console.log('Everything is fine with Flow!');
-                    console.log('-----------------------------\n'.green);
-                }
-                if (options.quietSuccess !== true || hasErrors) {
-                    console.log(stdout);
-                }
-                console.error(stderr);
-
-                waitingForFlow = false;
-            });
-        }
-    }
-
-    // When Webpack compilation is done, we should run Flow Status.
-    compiler.plugin('done', flowStatus);
+  });
 };
 
 module.exports = FlowStatusWebpackPlugin;
