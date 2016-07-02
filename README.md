@@ -76,6 +76,22 @@ module.exports = {
 }
 ```
 
+If you want the plugin to fail the build if the code doesn't type check, pass `failOnError = true`, and include the `NoErrorsPlugin`:
+```js
+var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
+
+module.exports = {
+    ...
+    plugins: [
+        new webpack.NoErrorsPlugin(),
+        new FlowStatusWebpackPlugin({
+            failOnError: true
+        })
+    ]
+}
+```
+
+
 License
 -------
 This plugin is released under the [MIT License](https://opensource.org/licenses/MIT).
