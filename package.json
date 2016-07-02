@@ -3,7 +3,6 @@
   "version": "0.1.5",
   "author": "Diego Durli <dgodurli@gmail> (https://github.com/diegodurli)",
   "dependencies": {
-    "colors": "^1.1.2",
     "shelljs": "^0.6.0"
   },
   "description": "Run Flow Status on each Webpack build.",

@@ -1,4 +1,3 @@
-var colors = require('colors');
 var shell = require('shelljs');
 
 
