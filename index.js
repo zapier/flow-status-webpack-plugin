@@ -14,6 +14,7 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
   var options = this.options;
   var flowArgs = options.flowArgs || '';
   var flow = options.binaryPath || 'flow';
+  var failOnError = options.failOnError || false;
   var firstRun = true;
   var waitingForFlow = false;
 
@@ -79,7 +80,9 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
   // If there are flow errors, fail the build before compilation starts.
   compiler.plugin('compilation', function (compilation) {
     if (flowError) {
-      compilation.errors.push(flowError);
+      if (failOnError === true) {
+        compilation.errors.push(flowError);
+      }
       flowError = null;
     }
   });
