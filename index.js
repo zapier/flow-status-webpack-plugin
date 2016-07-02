@@ -45,7 +45,7 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
       // this will start a flow server if it was not running
       shell.exec(flow + ' status --color always', {silent: true}, function(code, stdout, stderr) {
         var hasErrors = code !== 0;
-        cb = hasErrors ? errorCb : successCb
+        var cb = hasErrors ? errorCb : successCb
         waitingForFlow = false;
 
         if (isFunction(cb)) {
