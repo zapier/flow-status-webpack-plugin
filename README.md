@@ -77,6 +77,7 @@ module.exports = {
 ```
 
 If you want the plugin to fail the build if the code doesn't type check, pass `failOnError = true`, and include the `NoErrorsPlugin`:
+
 ```js
 var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
 
@@ -86,6 +87,24 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         new FlowStatusWebpackPlugin({
             failOnError: true
+        })
+    ]
+}
+```
+
+If you want to perform an action on successful/failed Flow checks, use the `onSucess`/`onError` callbacks:
+
+```js
+var FlowStatusWebpackPlugin = require('flow-status-webpack-plugin');
+var notifier = require('node-notifier');
+
+module.exports = {
+    ...
+    plugins: [
+        new webpack.NoErrorsPlugin(),
+        new FlowStatusWebpackPlugin({
+            onSuccess: function(stdout) { notifier.notify({ title: 'Flow', message: 'Flow is happy!' }); },
+            onError: function(stdout) { notifier.notify({ title: 'Flow', message: 'Flow is sad!' }); }
         })
     ]
 }
