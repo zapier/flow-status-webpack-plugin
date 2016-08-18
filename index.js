@@ -1,10 +1,6 @@
 var shell = require('shelljs');
 
-
-function isFunction(x) {
-  return Object.prototype.toString.call(x) == '[object Function]';
-}
-
+function noop() {}
 
 function FlowStatusWebpackPlugin(options) {
   this.options = options || {};
@@ -15,6 +11,8 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
   var flowArgs = options.flowArgs || '';
   var flow = options.binaryPath || 'flow';
   var failOnError = options.failOnError || false;
+  var onSuccess = options.onSuccess || noop;
+  var onError = options.onError || noop;
   var firstRun = true;
   var waitingForFlow = false;
 
@@ -38,31 +36,33 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
     }
   }
 
-  function flowStatus (successCb, errorCb) {
+  function flowStatus(successCb, errorCb) {
     if (!waitingForFlow) {
       waitingForFlow = true;
 
       // this will start a flow server if it was not running
       shell.exec(flow + ' status --color always', {silent: true}, function(code, stdout, stderr) {
         var hasErrors = code !== 0;
-        var cb = hasErrors ? errorCb : successCb
+        var cb = hasErrors ? errorCb : successCb;
         waitingForFlow = false;
 
-        if (isFunction(cb)) {
-          cb(stdout, stderr)
-        }
+        cb(stdout, stderr);
       });
     }
   }
 
   var flowError = null
 
-  function checkItWreckIt (compiler, cb) {
+  function checkItWreckIt(compiler, cb) {
     startFlowIfFirstRun(compiler, function () {
-      flowStatus(function success () {
-        cb()
-      }, function error (stdout) {
-        flowError = new Error(stdout)
+      flowStatus(function success(stdout) {
+        onSuccess(stdout);
+
+        cb();
+      }, function error(stdout) {
+        onError(stdout);
+
+        flowError = new Error(stdout);
         // Here we don't pass error to callback because
         // webpack-dev-middleware would just throw it
         // and cause webpack dev server to exit with
