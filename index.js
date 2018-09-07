@@ -6,6 +6,8 @@ function FlowStatusWebpackPlugin(options) {
   this.options = options || {};
 }
 
+var pluginName = 'FlowStatusWebpackPlugin';
+
 FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
   var options = this.options;
   var flowArgs = options.flowArgs || '';
@@ -74,11 +76,11 @@ FlowStatusWebpackPlugin.prototype.apply = function(compiler) {
     })
   }
 
-  compiler.plugin('run', checkItWreckIt);
-  compiler.plugin('watch-run', checkItWreckIt);
+  compiler.hooks.run.tapAsync(pluginName, checkItWreckIt);
+  compiler.hooks.watchRun.tapAsync(pluginName, checkItWreckIt);
 
   // If there are flow errors, fail the build before compilation starts.
-  compiler.plugin('compilation', function (compilation) {
+  compiler.hooks.compilation.tap(pluginName, function (compilation) {
     if (flowError) {
       if (failOnError === true) {
         compilation.errors.push(flowError);
